@@ -1,31 +1,18 @@
-import threading
-import time
+from picamera import PiCamera
+from threading import Thread
 
-class einThread(threading.Thread):
-    def __init__(self, threadID, name, count):
-        threading.Thread.__init__(self)
-        self.threadID = threadID
-        self.name = name
-        self.count = count
-        
-    def run(self):
-        print(self.name + " wird gestartet." + "\n")
-        print_time(self.name, 1, self.count)
-        print(self.name + " wird gestoppt." + "\n")
-    
-def print_time(name, delay, count):
-    while count:
-        time.sleep(delay)
-        print("%s: %s %s" % (name, time.ctime(time.time()), count) + "\n")
-        count -= 1
-            
-thread1 = einThread(1, "Thread1", 10)
-thread2 = einThread(2, "Thread2", 5)
+class myCamrecord():
+    def __init__(self,resolution=(1280,720),framerate=45,RecLen=5):
+        self.camera = PiCamera()
+        self.camera.resolution = resolution
+        self.camera.framerate = framerate
+        self.Reclen = RecLen
 
+    def RecordVideo(self)
+        self.camera.start_recording("testvid.h264",foramt="h264", quality=23)
+        self.camera.wait_recording(5)
+        self.camera.stop_recording()
 
-
-thread1.start()
-thread2.start()
-thread1.join()
-thread2.join()
-print("Main Thread ist fertig.")
+ReVid = myCamrecord()
+Camthread1 = Thread(None, ReVid.RecordVideo)
+Camthread1.start()
