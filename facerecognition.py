@@ -60,8 +60,7 @@ while True:
             # If the confidence level is high, display the predicted name
             name = names[id]
             confidence = "  {0}%".format(round(100 - loss))
-            # TODO: if confidence >(55-)60 
-            # piepen
+            # TODO: if confidence >(55-)60  -> piepen
         else:
             # If the confidence level is low, display "unknown"
             name = "unkown"
