@@ -48,12 +48,12 @@ def capture_faces(face_id):
             cv2.imshow('frame', frame)
             
         # Check if the user pressed the 'ESC' key to exit the program, prevents a crash  
-        k = cv2.waitKey(100) & 0xff # Press 'ESC' for exiting video
+        k = cv2.waitKey(100) & 0xff
         if k == 27:
             break
         
         # Stop capturing faces after 30 frames
-        elif count >= 30: # Take 30 face sample and stop video
+        elif count >= 30: 
              break
          
     # Print a message to let the user know that the program is exiting
