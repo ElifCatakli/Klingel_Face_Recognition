@@ -42,6 +42,7 @@ def capture_faces(face_id):
             count += 1
             
             # Save the captured image to the datasets folder
+            # If count in dataset/User.face_id.count already exist do count+=1
             cv2.imwrite("dataset/User." + str(face_id) + '.' +  str(count) + ".jpg", gray[y:y+h,x:x+w])
             
             # Display the frame with the rectangle around the face
