@@ -60,13 +60,13 @@ while True:
             # If the confidence level is high, display the predicted name
             name = names[id]
             confidence = "  {0}%".format(round(100 - loss))
-            # if confidence >(55-)60 
+            # TODO: if confidence >(55-)60 
             # piepen
         else:
             # If the confidence level is low, display "unknown"
             name = "unkown"
             confidence = "  {0}%".format(round(100 - loss))
-            # kein piepen, oder print -> kein Zutritt
+            # TODO: kein piepen, oder print -> kein Zutritt
         
         # Display the name and confidence level on the frame
         cv2.putText(frame, name, (x+5,y-5), font, 1, (255,255,255), 2)
