@@ -1,0 +1,114 @@
+import RPi.GPIO as GPIO
+import cv2
+import time
+
+
+def setupGPIO():
+    #Pin für Buzzer festlegen
+    global BuzzerPin
+    BuzzerPin = 22
+
+    #Pin für Button festlegen
+    global ButtonPin
+    ButtonPin = 17
+
+    GPIO.setmode(GPIO.BCM)
+
+    #Zuweisung des Pins für Button
+    GPIO.setup(ButtonPin, GPIO.IN)
+
+    #Zuweisung des Pins für Buzzer
+    GPIO.setup(BuzzerPin, GPIO.OUT)
+    GPIO.output(BuzzerPin, GPIO.HIGH)
+
+
+
+
+
+def setupCamera():
+    #Facedetection konfigurieren
+    global video_capture
+    global cascPath
+
+
+    cascPath = "./haarcascade_frontalface_default.xml"
+    faceCascade = cv2.CascadeClassifier(cascPath)
+
+    video_capture = cv2.VideoCapture(0)
+
+    #Defaultwerte der Kamera ersetzen
+    video_capture.set(cv2.CAP_PROP_BRIGHTNESS, 50) #Helligkeit des Videofeeds
+    video_capture.set(cv2.CAP_PROP_FPS, 15) #Framerate der Kamera auf 30 FPS
+    video_capture.set(cv2.CAP_PROP_SATURATION, -100) #Saettigung der Kamera auf -100 gesetzt, fuer BW-Bild (evtl. weniger CPU-Last, da keine Farben?)
+    video_capture.set(cv2.CAP_PROP_CONTRAST, 50) #Anpassung des Kontrasts (evtl. bessere/deutlichere Erkennung von Gesichtern)
+
+
+
+
+
+def cleanup():
+    #Erst Buzzer ausschalten, dann die GPIO-Pins cleanen
+    GPIO.output(BuzzerPin, GPIO.HIGH)
+    GPIO.cleanup()
+    video_capture.release()
+
+
+
+
+
+def buzzerOn():
+    GPIO.output(BuzzerPin, GPIO.HIGH)
+
+
+
+
+
+def buzzerOff():
+    GPIO.output(BuzzerPin, GPIO.LOW)
+
+
+
+
+
+def facedetection(cascadePfad):
+    while True:
+        ret, frame = video_capture.read()
+    
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    
+        faces = cascadePfad.detectMultiScale(
+            gray,
+            scaleFactor = 1.2,
+            minNeighbors = 5,
+            minSize = (50, 50),
+            flags = cv2.CASCADE_SCALE_IMAGE
+        )
+    
+        #Rahmen um erkanntes(!) Gesicht zeichnen lassen und Buzzer für 1 Sekunde einschalten
+        for (x, y, w, h) in faces:
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+            buzzerOn()
+            time.sleep(1.0)
+            buzzerOff()
+        
+        #Kamerabild anzeigen lassen
+        cv2.imshow('Video', frame)
+    
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    
+    video_capture.release()
+
+
+
+
+
+if __name__ == '__main__':
+    setupGPIO()
+    setupCamera()
+
+    try:
+        facedetection(cascPath)
+
+    except KeyboardInterrupt:
+        cleanup()
