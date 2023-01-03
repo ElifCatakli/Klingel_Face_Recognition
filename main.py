@@ -26,15 +26,35 @@ def setupGPIO():
 
 
 def setupCamera():
+    
+    #print(cv2.__version__)
+    
     #Facedetection konfigurieren
     global video_capture
-    global cascPath
+    global cascPath, faceCascade
 
 
-    cascPath = "./haarcascade_frontalface_default.xml"
+    cascPath = "haarcascade_frontalface_default.xml"
     faceCascade = cv2.CascadeClassifier(cascPath)
-
+    
+    #Variablen für die Fenstergröße deklarieren
+    global frameWidth, frameHeight
+    
+    frameWidth = 640
+    frameHeight = 480
+    
+    
+    #Initialisierung der Kamera
     video_capture = cv2.VideoCapture(0)
+    video_capture.set(3, frameWidth)
+    video_capture.set(4, frameHeight)
+    
+    
+    #Minimale Fenstergröße der Gesichtserkennung festlegen
+    global minW, minH
+    
+    minW = 0.1 * frameWidth
+    minH = 0.1 * frameHeight
 
     #Defaultwerte der Kamera ersetzen
     video_capture.set(cv2.CAP_PROP_BRIGHTNESS, 50) #Helligkeit des Videofeeds
@@ -70,18 +90,18 @@ def buzzerOff():
 
 
 
-def facedetection(cascadePfad):
+def facedetection(cP):
+    #print(cP)
     while True:
         ret, frame = video_capture.read()
     
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     
-        faces = cascadePfad.detectMultiScale(
+        faces = faceCascade.detectMultiScale(
             gray,
             scaleFactor = 1.2,
             minNeighbors = 5,
-            minSize = (50, 50),
-            flags = cv2.CASCADE_SCALE_IMAGE
+            minSize = (int(minW), int(minH)),
         )
     
         #Rahmen um erkanntes(!) Gesicht zeichnen lassen und Buzzer für 1 Sekunde einschalten
