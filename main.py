@@ -8,9 +8,10 @@ def setupGPIO():
     global BuzzerPin
     BuzzerPin = 22
 
-    #Pin für Button festlegen
-    global ButtonPin
+    #Pin für Button festlegen und eine Variable zum Abfragen, ob der Knopf bereits gedrückt wurde
+    global ButtonPin, buttonAlreadyPressed
     ButtonPin = 17
+    buttonAlreadyPressed = 0
 
     GPIO.setmode(GPIO.BCM)
 
@@ -71,6 +72,7 @@ def cleanup():
     GPIO.output(BuzzerPin, GPIO.LOW)
     GPIO.cleanup()
     video_capture.release()
+    cv2.destroyAllWindows()
 
 
 
@@ -108,17 +110,14 @@ def facedetection(cP):
         for (x, y, w, h) in faces:
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
             buzzerOn()
-            time.sleep(1.0)
+            time.sleep(0.0a1)
             buzzerOff()
         
         #Kamerabild anzeigen lassen
         cv2.imshow('Video', frame)
     
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(1) & 0xFF==ord('q'):
             break
-    
-    video_capture.release()
-
 
 
 
@@ -127,8 +126,10 @@ if __name__ == '__main__':
     setupGPIO()
     setupCamera()
 
-    try:
-        facedetection(cascPath)
-
-    except KeyboardInterrupt:
-        cleanup()
+    while True:
+        if(GPIO.input(ButtonPin) and buttonAlreadyPressed == 0):
+            buttonAlreadyPressed = 1
+            facedetection(cascPath)
+            print("Facedetection aus")
+            cleanup()
+            break
