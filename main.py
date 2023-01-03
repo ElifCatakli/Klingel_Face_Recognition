@@ -1,6 +1,9 @@
 import RPi.GPIO as GPIO
 import cv2
 import time
+from facerecognition import facereg
+
+
 
 
 def setupGPIO():
@@ -93,7 +96,7 @@ def buzzerOff():
 
 
 def facedetection(cP):
-    #print(cP)
+
     while True:
         ret, frame = video_capture.read()
     
@@ -129,7 +132,8 @@ if __name__ == '__main__':
     while True:
         if(GPIO.input(ButtonPin) and buttonAlreadyPressed == 0):
             buttonAlreadyPressed = 1
-            facedetection(cascPath)
+            #facedetection(cascPath)
+            facereg()
             print("Facedetection aus")
             cleanup()
             break
