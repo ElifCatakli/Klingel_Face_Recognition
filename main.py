@@ -110,7 +110,7 @@ def facedetection(cP):
         for (x, y, w, h) in faces:
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
             buzzerOn()
-            time.sleep(0.0a1)
+            time.sleep(0.01)
             buzzerOff()
         
         #Kamerabild anzeigen lassen
