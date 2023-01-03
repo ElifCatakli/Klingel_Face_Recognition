@@ -19,7 +19,7 @@ def setupGPIO():
 
     #Zuweisung des Pins für Buzzer
     GPIO.setup(BuzzerPin, GPIO.OUT)
-    GPIO.output(BuzzerPin, GPIO.HIGH)
+    GPIO.output(BuzzerPin, GPIO.LOW)
 
 
 
@@ -48,7 +48,7 @@ def setupCamera():
 
 def cleanup():
     #Erst Buzzer ausschalten, dann die GPIO-Pins cleanen
-    GPIO.output(BuzzerPin, GPIO.HIGH)
+    GPIO.output(BuzzerPin, GPIO.LOW)
     GPIO.cleanup()
     video_capture.release()
 
