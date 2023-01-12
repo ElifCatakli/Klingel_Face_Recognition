@@ -1,6 +1,5 @@
 import cv2
 import sys
-import os
 import time
 
 cascPath = "./haarcascade_frontalface_default.xml"
