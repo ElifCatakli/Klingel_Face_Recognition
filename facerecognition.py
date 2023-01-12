@@ -2,15 +2,20 @@ import cv2
 import numpy as np
 import os 
 
+
+import logging
+
+logging.basicConfig(filename="confidence.log", level = logging.DEBUG)
+
 '''
 font = cv2.FONT_HERSHEY_SIMPLEX
 id = 0
-recognierPath = "trainer/trainer.yml"
-cascadePath = "haarcascade_frontalface_default.xml"
-names = ['None', 'Elif', 'Daniel', 'Jathu', 'id4'] 
+
+recognizerPath, cascadePath und names werden jetzt in der main gehandlet
+
 videoPath = 0
 '''
-def facerecognition(recognizerPath, cascadePath, names):
+def facerecognition(recognizerPath, cascadePath, names, camera):
 
     # Create the face recognizer and load the trained data
     recognizer = cv2.face.LBPHFaceRecognizer_create()
@@ -20,7 +25,7 @@ def facerecognition(recognizerPath, cascadePath, names):
     faceCascade = cv2.CascadeClassifier(cascadePath);
 
     '''
-     Daniela wir können die ID auch außerhalb der methode definieren bsp. da wo wir die Parameter in der main definieren. Hatten dies als globale Variable. 
+     Daniel, wir können die ID auch außerhalb der methode definieren bsp. da wo wir die Parameter in der main definieren. Hatten dies als globale Variable. 
      Auch font ggf als globale variable? oder als parameter?
      Sieht vllt scheisse aus wenn das als einziges hier stehen bleibt, kanns die aber aussuchen
      oder einfach ohne parameter siehe facerecognition_without_Parameters
@@ -40,9 +45,9 @@ def facerecognition(recognizerPath, cascadePath, names):
     '''
     ggf video source als parameter? def facerecognition(recognizerPath, cascadePath, names, videoPath) Suchen Sie sich aus
     '''
-    camera = cv2.VideoCapture(0)
-    camera.set(3, width)
-    camera.set(4, height)
+    #camera = cv2.VideoCapture(0)
+    #camera.set(3, width)
+    #camera.set(4, height)
 
     # Set the minimum window size to be recognized as a face
     minW = 0.1 * width
@@ -70,12 +75,14 @@ def facerecognition(recognizerPath, cascadePath, names):
 
             # Predict the identity of the face and calculate the confidence level
             id, loss = recognizer.predict(gray[y:y+h,x:x+w])
+            logging.debug(loss)
             
             # If loss is less than 100 || if 0 = perfect match 
             if loss < 100:
                 # If the confidence level is high, display the predicted name
                 name = names[id]
-                confidence = "  {0}%".format(round(100 - loss))
+               # confidence = "  {0}%".format(round(100 - loss))
+                confidence = "  {0}%".format(round(100-float(loss)))
             else:
                 # If the confidence level is low, display "unknown"
                 name = "unkown"
@@ -83,7 +90,9 @@ def facerecognition(recognizerPath, cascadePath, names):
             
             # Display the name and confidence level on the frame
             cv2.putText(frame, name, (x+5,y-5), font, 1, (255,255,255), 2)
-            cv2.putText(frame, confidence, (x+5,y+h-5), font, 1, (255,255,0), 1)  
+            cv2.putText(frame, confidence, (x+5,y+h-5), font, 1, (255,255,0), 1)
+            
+            logging.info(confidence)
 
         # Display the frame
         cv2.imshow('camera',frame) 
