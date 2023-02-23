@@ -48,7 +48,6 @@ def facerecognition(recognizerPath, cascadePath, names, camera):
             minNeighbors = 5,
             minSize = (int(minW), int(minH)),
         )
-        
         # Loop through the detected faces
         for(x,y,w,h) in faces:
             # Draw a rectangle around the face
@@ -56,36 +55,27 @@ def facerecognition(recognizerPath, cascadePath, names, camera):
 
             # Predict the identity of the face and calculate the confidence level
             id, confidence = recognizer.predict(gray[y:y+h,x:x+w])
-            
             confidence = round(confidence, 0)
-            
             logging.debug(confidence)
             
             if confidence < 100:
-                
                 name = names[id]
-                
                 confidence = "  {0}%".format(confidence)
-                
                 waitCounter += 1
                 
                 if waitCounter >= 30:
-                    return True
-                
+                    return True  
             else:
                 # If the confidence level is low, display "unknown"
                 name = "unkown"
                 confidence = "0%"
-                
                 waitCounter += 1
                 
                 if waitCounter >= 30:
                     return False
-            
             # Display the name and confidence level on the frame
             cv2.putText(frame, name, (x+5,y-5), font, 1, (255,255,255), 2)
             cv2.putText(frame, confidence, (x+5,y+h-5), font, 1, (255,255,0), 1)
-            
             logging.info(confidence)
 
         # Display the frame
