@@ -4,7 +4,8 @@ import time
 
 import logging
 
-logging.basicConfig(filename="confidence.log", level = logging.DEBUG)
+#Log-Datei erstellen
+logging.basicConfig(filename="confidence.log", level = logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%d/%m/%Y %I:%M:%S %p')
 
 
 
