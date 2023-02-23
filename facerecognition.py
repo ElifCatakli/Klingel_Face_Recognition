@@ -1,19 +1,13 @@
 import cv2
 import numpy as np
-
+import time
 
 import logging
 
 logging.basicConfig(filename="confidence.log", level = logging.DEBUG)
 
-'''
-font = cv2.FONT_HERSHEY_SIMPLEX
-id = 0
 
-recognizerPath, cascadePath und names werden jetzt in der main gehandlet
 
-videoPath = 0
-'''
 def facerecognition(recognizerPath, cascadePath, names, camera):
 
     # Create the face recognizer and load the trained data
@@ -23,12 +17,6 @@ def facerecognition(recognizerPath, cascadePath, names, camera):
     # Load the Haarcascade classifier for face detection
     faceCascade = cv2.CascadeClassifier(cascadePath);
 
-    '''
-     Daniel, wir können die ID auch außerhalb der methode definieren bsp. da wo wir die Parameter in der main definieren. Hatten dies als globale Variable. 
-     Auch font ggf als globale variable? oder als parameter?
-     Sieht vllt scheisse aus wenn das als einziges hier stehen bleibt, kanns die aber aussuchen
-     oder einfach ohne parameter siehe facerecognition_without_Parameters
-    '''
     # Set the front for displaying text on the frame
     font = cv2.FONT_HERSHEY_SIMPLEX
 
@@ -40,21 +28,15 @@ def facerecognition(recognizerPath, cascadePath, names, camera):
     width = 640
     height = 480
 
-    # Initialize and start the video capture
-    '''
-    ggf video source als parameter? def facerecognition(recognizerPath, cascadePath, names, videoPath) Suchen Sie sich aus
-    '''
-    #camera = cv2.VideoCapture(0)
-    #camera.set(3, width)
-    #camera.set(4, height)
-
     # Set the minimum window size to be recognized as a face
     minW = 0.1 * width
     minH = 0.1 * height
-
+    
+    waitCounter = 0
+    
     while True:
         # Capture frame-by-frame
-        ret, frame =camera.read()
+        ret, frame = camera.read()
 
         # Convert the frame to grayscale for easier processing
         gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
@@ -66,26 +48,39 @@ def facerecognition(recognizerPath, cascadePath, names, camera):
             minNeighbors = 5,
             minSize = (int(minW), int(minH)),
         )
-
+        
         # Loop through the detected faces
         for(x,y,w,h) in faces:
             # Draw a rectangle around the face
             cv2.rectangle(frame, (x,y), (x+w,y+h), (0,255,0), 2)
 
             # Predict the identity of the face and calculate the confidence level
-            id, loss = recognizer.predict(gray[y:y+h,x:x+w])
-            logging.debug(loss)
+            id, confidence = recognizer.predict(gray[y:y+h,x:x+w])
             
-            # If loss is less than 100 || if 0 = perfect match 
-            if loss < 100:
-                # If the confidence level is high, display the predicted name
+            confidence = round(confidence, 0)
+            
+            logging.debug(confidence)
+            
+            if confidence < 100:
+                
                 name = names[id]
-               # confidence = "  {0}%".format(round(100 - loss))
-                confidence = "  {0}%".format(round(100-float(loss)))
+                
+                confidence = "  {0}%".format(confidence)
+                
+                waitCounter += 1
+                
+                if waitCounter >= 30:
+                    return True
+                
             else:
                 # If the confidence level is low, display "unknown"
                 name = "unkown"
-                confidence = "  {0}%".format(round(100 - loss))
+                confidence = "0%"
+                
+                waitCounter += 1
+                
+                if waitCounter >= 30:
+                    return False
             
             # Display the name and confidence level on the frame
             cv2.putText(frame, name, (x+5,y-5), font, 1, (255,255,255), 2)

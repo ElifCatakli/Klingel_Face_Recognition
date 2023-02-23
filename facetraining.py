@@ -42,7 +42,7 @@ def getImagesAndLabels(path):
         id = int(os.path.split(imagePath)[-1].split(".")[1])
         
         # Detect faces in the images
-        faces = detector.detectMultiScale(img_numpy)
+        faces = detector.detectMultiScale(img_numpy,scaleFactor = 1.2,minNeighbors = 5)
         
         # Iterate over the detected faces
         for (x,y,w,h) in faces:
