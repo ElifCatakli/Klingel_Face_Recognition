@@ -60,13 +60,6 @@ class main:
         video_capture = cv2.VideoCapture(0)
         video_capture.set(3, frameWidth)
         video_capture.set(4, frameHeight)
-    
-    
-        #Minimale Fenstergröße der Gesichtserkennung festlegen
-        global minW, minH
-    
-        minW = 0.1 * frameWidth
-        minH = 0.1 * frameHeight
 
         #Defaultwerte der Kamera ersetzen
         video_capture.set(cv2.CAP_PROP_BRIGHTNESS, 50) #Helligkeit des Videofeeds
