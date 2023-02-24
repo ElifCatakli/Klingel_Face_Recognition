@@ -50,8 +50,6 @@ class main:
         faceCascade = cv2.CascadeClassifier(cascPath)
     
         #Variablen für die Fenstergröße deklarieren
-        global frameWidth, frameHeight
-    
         frameWidth = 640
         frameHeight = 480
     
