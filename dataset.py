@@ -1,6 +1,4 @@
 import cv2
-import os
-
 
 def capture_faces(face_id):
     # Initialize the video capture
