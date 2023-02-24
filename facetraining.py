@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 from PIL import Image
-import os
 from dataset import capture_faces
 
 #Test Methodes
