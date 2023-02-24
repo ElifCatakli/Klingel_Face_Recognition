@@ -62,8 +62,8 @@ class main:
         #Defaultwerte der Kamera ersetzen
         video_capture.set(cv2.CAP_PROP_BRIGHTNESS, 50) #Helligkeit des Videofeeds
         video_capture.set(cv2.CAP_PROP_FPS, 30) #Framerate der Kamera auf 30 FPS
-        #video_capture.set(cv2.CAP_PROP_SATURATION, 0) #Saettigung der Kamera auf -100 gesetzt, fuer BW-Bild (evtl. weniger CPU-Last, da keine Farben?)
-        #video_capture.set(cv2.CAP_PROP_CONTRAST, 50) #Anpassung des Kontrasts (evtl. bessere/deutlichere Erkennung von Gesichtern)
+        #video_capture.set(cv2.CAP_PROP_SATURATION, 0) 
+        #video_capture.set(cv2.CAP_PROP_CONTRAST, 50)
  
     
     
